@@ -8,12 +8,16 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { Movie } from './entities/movie.entity';
+import { MoviesService } from './movies.service';
 
 @Controller('movies')
 export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+
   @Get()
-  getAll() {
-    return 'Movies!';
+  getAll(): Movie[] {
+    return this.moviesService.getAll();
   }
 
   @Get('search')
@@ -22,20 +26,18 @@ export class MoviesController {
   }
 
   @Get(':id')
-  getMovieById(@Param('id') id: string) {
-    return `Movie By ${id}`;
+  getMovieById(@Param('id') id: string): Movie {
+    return this.moviesService.getMovieById(id);
   }
 
   @Post()
-  createMovie(@Body() movieData) {
-    console.log(movieData);
-
-    return movieData;
+  createMovie(@Body() movieData): boolean {
+    return this.moviesService.createMovie(movieData);
   }
 
   @Delete(':id')
-  deleteMovie(@Param('id') id: string) {
-    return `Delete Movie ${id}`;
+  deleteMovie(@Param('id') id: string): boolean {
+    return this.moviesService.deleteMovie(id);
   }
 
   @Patch(':id')
