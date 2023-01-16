@@ -90,4 +90,29 @@ describe('MoviesService', () => {
       expect(afterCreate).toEqual(beforeCreate + 1);
     });
   });
+
+  describe('patchMovie()', () => {
+    it('should update a movie', () => {
+      service.createMovie({
+        title: 'test',
+        genres: ['test'],
+        year: 2023,
+      });
+
+      service.patchMovie(1, { title: 'test123' });
+
+      const movie = service.getMovieById(1);
+
+      expect(movie.title).toEqual('test123');
+    });
+
+    it('should throw 404 error', () => {
+      try {
+        service.patchMovie(999, { title: 'test123' });
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+        expect(e.message).toEqual('Movie with Id(999) Not found');
+      }
+    });
+  });
 });
